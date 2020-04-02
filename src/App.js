@@ -2,6 +2,8 @@ import React from 'react';
 import TodoList from './Components/TodoList'
 import './App.css';
 import _ from 'lodash';
+import Axios from "axios"
+import { Button } from 'antd';
 
 class App extends React.Component {
   state = {
@@ -9,6 +11,19 @@ class App extends React.Component {
     todoList: [],
     editedId: null,
     editedText: null,
+  }
+
+  clickToSendRequest =() => {
+  Axios.get("http://www.mocky.io/v2/5e82e4942f00006cfa2fc586")
+  .then(response => {
+    console.log(response.data)
+    this.setState ({
+      todoList: response.data
+    })
+  })
+  .catch(error => {
+    console.log(error)
+  })
   }
 
   addTodoItem = () => {
@@ -40,7 +55,7 @@ class App extends React.Component {
     const editedText = this.state.editedText
 
     let newTodoList = this.state.todoList.map((todoItem) => {
-      if (todoItem.id == targetId) {
+      if (todoItem.id === targetId) {
         return {
           id: todoItem.id,
           task: editedText,
@@ -82,9 +97,11 @@ class App extends React.Component {
 
     return (
       <div className="container" >
+        <Button type="primary" onClick={this.clickToSendRequest}>Click to send request</Button>
         <br />
         <br />
         <div className="row">
+        
           <input value={inputValue} onChange={this.onChangeInputValue} className="form-control col-10 App" placeholder="Enter Todo-list" />
           <button onClick={this.addTodoItem} type="button" className="col-2 App btn btn-primary">Add</button>
         </div>
@@ -93,6 +110,8 @@ class App extends React.Component {
           <input value={editedText} onChange={this.onChangeEditedText} className="form-control col-8 App" placeholder="Edit text here" />
           <input value={editedId} onChange={this.onChangeEditedId} className="form-control col-2 App" placeholder="Edited ID" />
           <button onClick={this.editItemById} className="col-2 App btn btn-primary" >Edit</button>
+          
+
         </div>
         <br />
         <TodoList deleteItemById={this.deleteItemById} todoList={this.state.todoList} />
